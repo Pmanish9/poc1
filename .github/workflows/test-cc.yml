@@ -18,11 +18,20 @@ jobs:
       - name: Install dependencies
         run: go mod download
       - name: Run tests and generate coverage report
-        run: go test -race -coverprofile=coverage.xml ./...
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
-        with:
-          file: ./coverage.xml
-          #token: ${{ secrets.CODECOV_TOKEN }}
-          flags: unittests
-          version: "v0.1.15"
+        run: go test -race -coverprofile=coverage.out ./...
+      - name: Create coverage output
+        id: create-coverage-output
+        if: always()
+        run: |
+         covRes=$(cat coverage.out)
+         covRes="${covRes//$'\n'/'<br>'}"
+         covRes="${covRes//$'\r'/'<br>'}"
+         echo "result=$covRes" >> $GITHUB_OUTPUT
+
+      # - name: Upload coverage to Codecov
+      #   uses: codecov/codecov-action@v3
+      #   with:
+      #     file: ./coverage.xml
+      #     #token: ${{ secrets.CODECOV_TOKEN }}
+      #     flags: unittests
+      #     version: "v0.1.15"
