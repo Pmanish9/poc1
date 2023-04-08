@@ -26,7 +26,8 @@ jobs:
           echo "Code coverage is $total" >> $GITHUB_OUTPUT
       - name: show CC on PR 
         id: set-val-1
-        run: echo "Code coverage :: $total" >> $GITHUB_OUTPUT
+        run: echo "Code coverage is $total" >> $GITHUB_OUTPUT
+        
         
 
       # - name: Create coverage output
