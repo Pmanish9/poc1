@@ -18,15 +18,21 @@ jobs:
       - name: Install dependencies
         run: go mod download
       - name: Run tests and generate coverage report
-        run: go test -race -coverprofile=coverage.out ./...
-      - name: Create coverage output
-        id: create-coverage-output
-        if: always()
+        run: go test -race -coverprofile=coverage.out -covermode=count ./...
+      - name: print code coverage
         run: |
-         covRes=$(cat coverage.out)
-         covRes="${covRes//$'\n'/'<br>'}"
-         covRes="${covRes//$'\r'/'<br>'}"
-         echo "result=$covRes" >> $GITHUB_OUTPUT
+          set -x
+          total=`go tool cover -func=coverage.out | grep total | grep -Eo '[0-9]+\.[0-9]+'`
+          echo "Code coverage is $total"
+
+      # - name: Create coverage output
+      #   id: create-coverage-output
+      #   if: always()
+      #   run: |
+      #    covRes=$(cat coverage.out)
+      #    covRes="${covRes//$'\n'/'<br>'}"
+      #    covRes="${covRes//$'\r'/'<br>'}"
+      #    echo "result=$covRes" >> $GITHUB_OUTPUT
 
       # - name: Upload coverage to Codecov
       #   uses: codecov/codecov-action@v3
