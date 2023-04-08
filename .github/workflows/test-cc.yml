@@ -29,7 +29,7 @@ jobs:
       - name: Comment on Pull Request
         uses: actions/github-script@v4
         with:
-          github-token: ${{ secrets.MY_PR_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const { owner, repo, number } = context.issue;
             const message = 'Code coverage is $totalcc';
