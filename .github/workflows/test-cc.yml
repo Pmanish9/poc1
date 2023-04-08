@@ -22,11 +22,30 @@ jobs:
       - name: print code coverage
         run: |
           set -x
-          total=`go tool cover -func=coverage.out | grep total | grep -Eo '[0-9]+\.[0-9]+'`
-          echo "Code coverage is $total" >> "$GITHUB_OUTPUT"
+          totalcc=`go tool cover -func=coverage.out | grep total | grep -Eo '[0-9]+\.[0-9]+'`
       - name: show CC on PR 
         id: set-val-1
-        run: echo "Code coverage is $total" >> "$GITHUB_STEP_SUMMARY"
+        run: echo "Code coverage is $totalcc" >> "$GITHUB_STEP_SUMMARY"
+      - name: Comment on Pull Request
+        uses: actions/github-script@v4
+        with:
+          github-token: ${{ secrets.MY_PR_TOKEN }}
+          script: |
+            const { owner, repo, number } = context.issue;
+            const message = 'Code coverage is $totalcc';
+            const { data: comments } = await github.issues.listComments({
+              owner,
+              repo,
+              issue_number: number
+            });
+            const lastComment = comments[comments.length - 1];
+            await github.issues.createComment({
+              owner,
+              repo,
+              issue_number: number,
+              body: message,
+              in_reply_to: lastComment.id
+            });
         
         
 
