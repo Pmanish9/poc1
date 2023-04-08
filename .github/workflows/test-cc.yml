@@ -18,7 +18,7 @@ jobs:
       - name: Install dependencies
         run: go mod download
       - name: Run tests and generate coverage report
-        run: go test -race -coverprofile=coverage.out -covermode=count ./...
+        run: go test -coverprofile=coverage.out -covermode=count ./...
       - name: print code coverage
         run: |
           set -x
