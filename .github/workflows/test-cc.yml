@@ -34,7 +34,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const { owner, repo, number } = context.issue;
-            const message = 'Code coverage is $totalcc';
+            const message = 'Code coverage is ${{totalcc}}';
             const { data: comments } = await github.issues.listComments({
               owner,
               repo,
