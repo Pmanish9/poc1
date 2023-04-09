@@ -31,19 +31,10 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const { owner, repo, number } = context.issue;
-            const message = 'Code coverage is ${{env.total_cc}}%';
-            const { data: comments } = await github.issues.listComments({
-              owner,
-              repo,
-              issue_number: number
-            });
-            const lastComment = comments[comments.length - 1];
-            await github.issues.createComment({
-              owner,
-              repo,
-              issue_number: number,
-              body: message,
-              in_reply_to: lastComment.id
-            });
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: 'Code coverage of feature folder is ${{env.total_cc}}% Please add more test cases!'
+            })
                
