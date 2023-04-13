@@ -27,11 +27,17 @@ jobs:
           totalcc=`go tool cover -func=coverage.out | grep total | grep -Eo '[0-9]+\.[0-9]+'`
           echo "total_cc=$totalcc" >> $GITHUB_ENV
       - name: Comment on Pull Request
-        uses: thollander/actions-comment-pull-request@v2
+        uses: actions/github-script@v3
         with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            message: Code coverage is ${{env.total_cc}}
-
+            github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: 'Code coverage is ${{env.total_cc}}%'
+            })
+          
 
             # console.log(context)
             # const { owner, repo, number } = context.issue;
